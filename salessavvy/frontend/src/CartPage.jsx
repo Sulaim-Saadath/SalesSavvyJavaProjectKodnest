@@ -16,52 +16,39 @@ export default function CartPage() {
   // Stores total price of products only
   const [subtotal, setSubtotal] = useState(0);
 
-  useEffect(() => {
-    // Fetch cart data when page loads
-    const fetchCartItems = async () => {
-      try {
-        // Call backend cart API
-        const response = await fetch("http://localhost:9090/api/cart/items", {
-          credentials: "include",
-        });
+  const fetchCartItems = async () => {
+    try {
+      const response = await fetch("http://localhost:9090/api/cart/items", {
+        credentials: "include",
+      });
 
-        // Check if request failed
-        if (!response.ok) {
-          throw new Error("Failed to fetch cart items");
-        }
-
-        // Convert response to JSON
-        const data = await response.json();
-
-        // Store cart items
-        setCartItems(
-          data?.cart?.products?.map((item) => ({
-            ...item,
-
-            // Format total price
-            total_price: parseFloat(item.total_price).toFixed(2),
-
-            // Format unit price
-            price_per_unit: parseFloat(item.price_per_unit).toFixed(2),
-          })) || [],
-        );
-
-        // Store overall cart total
-        setOverallPrice(
-          parseFloat(data?.cart?.overall_total_price || 0).toFixed(2),
-        );
-
-        // Store username
-        setUsername(data?.username || "");
-      } catch (error) {
-        // Log API errors
-        console.error("Error fetching cart items:", error);
+      if (!response.ok) {
+        throw new Error("Failed to fetch cart items");
       }
-    };
 
+      const data = await response.json();
+
+      setCartItems(
+        data?.cart?.products?.map((item) => ({
+          ...item,
+          total_price: parseFloat(item.total_price).toFixed(2),
+          price_per_unit: parseFloat(item.price_per_unit).toFixed(2),
+        })) || [],
+      );
+
+      setOverallPrice(
+        parseFloat(data?.cart?.overall_total_price || 0).toFixed(2),
+      );
+
+      setUsername(data?.username || "");
+    } catch (error) {
+      console.error("Error fetching cart items:", error);
+    }
+  };
+
+  useEffect(() => {
     fetchCartItems();
   }, []);
-
   useEffect(() => {
     const total = cartItems
       .reduce((total, item) => total + parseFloat(item.total_price), 0)
@@ -108,6 +95,7 @@ export default function CartPage() {
 
   // Function called when user clicks + or - button
   const handleQuantityChange = async (productId, newQuantity) => {
+    console.log("Product:", productId, "New Quantity:", newQuantity);
     try {
       // Remove item if quantity becomes 0
       if (newQuantity <= 0) {
@@ -131,10 +119,14 @@ export default function CartPage() {
           quantity: newQuantity,
         }),
       });
+      console.log("Status:", response.status);
+
+      const responseText = await response.text();
+      console.log("Response:", responseText);
 
       if (response.ok) {
-  await fetchCartItems();
-} else {
+        await fetchCartItems();
+      } else {
         throw new Error("Failed to update quantity");
       }
     } catch (error) {
@@ -161,26 +153,20 @@ export default function CartPage() {
                   <h3>{item.product_name}</h3>
 
                   <p className="cart-price">₹{item.price_per_unit}</p>
-
-                  <div className="quantity-controls">
-                    <button
-                      className="quantity-btn"
-                      onClick={() => handleQuantityChange(item.product_id, -1)}
-                    >
-                      -
-                    </button>
-
-                    <span className="quantity-value">{item.quantity}</span>
-
-                    <button
-                      className="quantity-btn"
-                      onClick={() => handleQuantityChange(item.product_id, 1)}
-                    >
-                      +
-                    </button>
-                  </div>
                 </div>
+                <button
+                  className="quantity-btn"
+                  onClick={() => handleQuantityChange(item.product_id, -1)}
+                >
+                  -
+                </button>
 
+                <button
+                  className="quantity-btn"
+                  onClick={() => handleQuantityChange(item.product_id, 1)}
+                >
+                  +
+                </button>
                 <div className="item-total">₹{item.total_price}</div>
 
                 <button

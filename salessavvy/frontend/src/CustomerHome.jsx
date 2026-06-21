@@ -3,7 +3,7 @@ import { CategoryNavigation } from "./components/CategoryNavigation";
 import { ProductList } from "./components/ProductList";
 import { Footer } from "./components/Footer";
 import { Header } from "./components/Header";
-import "./App.css";
+import "./CustomerHome.css";
 
 export default function CustomerHome() {
   const [products, setProducts] = useState([]);
@@ -11,6 +11,7 @@ export default function CustomerHome() {
   const [username, setUsername] = useState("");
   const [cartError, setCartError] = useState(false);
   const [isCartLoading, setIsCartLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     fetchProducts();
@@ -103,6 +104,9 @@ export default function CustomerHome() {
     }
   };
 
+  const filteredProducts = products.filter((product) =>
+  product.name.toLowerCase().includes(searchTerm.toLowerCase())
+);
   return (
     <div className="customer-homepage">
       <Header
@@ -110,12 +114,20 @@ export default function CustomerHome() {
         username={username}
       />
 
+      <input
+  type="text"
+  placeholder="Search products..."
+  value={searchTerm}
+  onChange={(e) => setSearchTerm(e.target.value)}
+  className="search-bar"
+/>
+
       <nav className="navigation">
         <CategoryNavigation onCategoryClick={handleCategoryClick} />
       </nav>
 
       <main className="main-content">
-        <ProductList products={products} onAddToCart={handleAddToCart} />
+        <ProductList products={filteredProducts} onAddToCart={handleAddToCart} />
       </main>
 
       <Footer />
