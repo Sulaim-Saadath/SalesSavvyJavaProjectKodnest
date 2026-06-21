@@ -97,11 +97,11 @@ export default function CartPage() {
   const handleQuantityChange = async (productId, newQuantity) => {
     console.log("Product:", productId, "New Quantity:", newQuantity);
     try {
-      // Remove item if quantity becomes 0
-      if (newQuantity <= 0) {
-        handleRemoveItem(productId);
-        return;
-      }
+      // // Remove item if quantity becomes 0
+      // if (newQuantity <= 0) {
+      //   handleRemoveItem(productId);
+      //   return;
+      // }
 
       // Send updated quantity to backend
       const response = await fetch("http://localhost:9090/api/cart/update", {
@@ -133,7 +133,7 @@ export default function CartPage() {
       console.error("Error updating quantity:", error);
     }
   };
-
+  console.log(cartItems);
   return (
     <div className="cart-page">
       <Header cartCount={cartItems.length} username={username} />
@@ -156,11 +156,15 @@ export default function CartPage() {
                 </div>
                 <button
                   className="quantity-btn"
-                  onClick={() => handleQuantityChange(item.product_id, -1)}
+                  onClick={() => {
+                    console.log("MINUS CLICKED");
+                    handleQuantityChange(item.product_id, -1);
+                  }}
                 >
                   -
                 </button>
-
+                <span>{item.quantity}</span>
+                <span className="quantity-display">{item.quantity}</span>
                 <button
                   className="quantity-btn"
                   onClick={() => handleQuantityChange(item.product_id, 1)}

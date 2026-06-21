@@ -199,6 +199,9 @@ public class CartService {
 		// quantityChange = -1
 		// newQuantity = 0
 		// In this case, delete the cart item completely
+		System.out.println("Current Quantity = " + currentQuantity);
+		System.out.println("Quantity Change = " + quantityChange);
+		System.out.println("New Quantity = " + newQuantity);
 		if (newQuantity == 0) {
 			cartRepository.delete(cartItem);
 		} else {
