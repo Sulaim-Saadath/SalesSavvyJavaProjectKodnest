@@ -163,7 +163,7 @@ export default function CartPage() {
                 >
                   -
                 </button>
-                <span>{item.quantity}</span>
+              
                 <span className="quantity-display">{item.quantity}</span>
                 <button
                   className="quantity-btn"
