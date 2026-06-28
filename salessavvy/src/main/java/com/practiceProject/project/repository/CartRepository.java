@@ -28,9 +28,9 @@ public interface CartRepository extends JpaRepository<CartItem, Integer> {
 			WHERE c.user.userId = :userId
 			""")
 	Long countTotalItems(@Param("userId") int userId);
-	
-    // Fetch all cart items belonging to a user
-    List<CartItem> findByUser_UserId(Integer userId);
+
+	// Fetch all cart items belonging to a user
+	List<CartItem> findByUser_UserId(Integer userId);
 
 	// Custom JPQL query
 	// Fetch cart items belonging to a specific user
@@ -62,18 +62,20 @@ public interface CartRepository extends JpaRepository<CartItem, Integer> {
 	// cartItemId -> identifies which cart row to update
 	// quantity -> new quantity value to store
 	void updateCartItemQuantity(int cartItemId, int quantity);
-	
 
 	// Custom query to delete a cart item
 	@Modifying
 	// Execute delete operation within a transaction
 	@Transactional
 	@Query("""
-	       DELETE FROM CartItem c
-	       WHERE c.user.userId = :userId
-	       AND c.product.productId = :productId
-	       """)
-	void deleteCartItem(
-	        @Param("userId") int userId,
-	        @Param("productId") int productId);
+			DELETE FROM CartItem c
+			WHERE c.user.userId = :userId
+			AND c.product.productId = :productId
+			""")
+	void deleteCartItem(@Param("userId") int userId, @Param("productId") int productId);
+
+	@Modifying
+	@Transactional
+	@Query("DELETE FROM CartItem c WHERE c.user.userId = :userId")
+	void deleteAllCartItemsByUserId(@Param("userId") int userId);
 }

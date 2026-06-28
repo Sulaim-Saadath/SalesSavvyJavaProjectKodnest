@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import com.practiceProject.project.entity.OrderItem;
 import com.practiceProject.project.entity.User;
 import com.practiceProject.project.repository.UserRepository;
+import com.practiceProject.project.service.PaymentService;
+import com.razorpay.RazorpayException;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -65,7 +67,7 @@ public class PaymentController {
 			// Call the payment service to create Razor pay order
 			String razorpayOrderId = paymentService.createOrder(user.getUserId(), totalAmount, cartItems);
 			return ResponseEntity.ok(razorpayOrderId);
-		} catch (RazorpayExcption e) {
+		} catch (RazorpayException e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body("Error creating razor pay order: " + e.getMessage());
