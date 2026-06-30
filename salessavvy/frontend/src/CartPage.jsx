@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./CartPage.css";
 import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
+import { useNavigate } from "react-router-dom";
 
 export default function CartPage() {
   // Stores all cart products
@@ -15,6 +16,8 @@ export default function CartPage() {
 
   // Stores total price of products only
   const [subtotal, setSubtotal] = useState(0);
+
+  const navigate = useNavigate();
 
   const fetchCartItems = async () => {
     try {
@@ -134,6 +137,96 @@ export default function CartPage() {
     }
   };
   console.log(cartItems);
+
+  // Data to send for Razorpay order creation
+  const handleCheckout = async () => {
+    try {
+      const requestBody = {
+        totalAmount: subtotal,
+        cartItems: cartItems.map((item) => ({
+          productId: item.productId,
+          quantity: item.quantity,
+          price: item.price_per_unit,
+        })),
+      };
+
+      // Create Razorpay order
+      const response = await fetch("http://localhost:9090/api/payment/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(requestBody),
+      });
+
+      // Stop if order creation failed
+      if (!response.ok) {
+        throw new Error("Failed to create Razorpay order");
+      }
+
+      // Read Razorpay order details
+      const razorpayOrderId = await response.text(); // response.text() => converts the backend JSON response into a String.
+
+      // Razorpay configuration
+      const options = {
+        key: "rzp_test_T6uwtR7zR6HuId",
+        amount: subtotal * 100, // Convert ₹ to paise
+        currency: "INR",
+        name: "SalesSavvy",
+        description: "Test Transaction",
+        order_id: razorpayOrderId,
+        handler: async function (response) {
+          // handler is automatically called by Razorpay after a successful payment.
+          try {
+            // Verify payment with backend
+            const verifyResponse = await fetch(
+              "http://localhost:9090/api/payment/verify",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                  razorpayOrderId: response.razorpay_order_id,
+                  razorpayPaymentId: response.razorpay_payment_id,
+                  razorpaySignature: response.razorpay_signature,
+                }),
+              },
+            );
+            const result = await verifyResponse.text();
+            if (verifyResponse.ok) {
+              alert("Payment verified successfully!");
+              navigate("/CustomerHome");navigate("/CustomerHome");
+            } else {
+              alert("Payment verification failed: " + result);
+            }
+          } catch (error) {
+            console.error("Error verifying payment: ", error);
+            alert("Payment verifcation failed, please try again.");
+          }
+        },
+        // Customer details shown in Razorpay
+        prefill: {
+          name: username,
+          email: "test@example.com",
+          contact: "9999999999",
+        },
+        theme: {
+          color: "#3399cc",
+        },
+      };
+
+      // Open Razorpay checkout
+      const razorpay = new window.Razorpay(options);
+      razorpay.open();
+    } catch (error) {
+      alert("Payment failed. Please try again.");
+      console.error("Error during checkout: ", error);
+    }
+  };
+
   return (
     <div className="cart-page">
       <Header cartCount={cartItems.length} username={username} />
@@ -163,7 +256,7 @@ export default function CartPage() {
                 >
                   -
                 </button>
-              
+
                 <span className="quantity-display">{item.quantity}</span>
                 <button
                   className="quantity-btn"
@@ -186,8 +279,8 @@ export default function CartPage() {
               <div className="subtotal">Subtotal: ₹{subtotal}</div>
 
               <div className="subtotal">Total: ₹{overallPrice}</div>
-
-              <button className="checkout-btn">Proceed to Checkout</button>
+ 
+              <button className="checkout-btn" onClick={handleCheckout}>Proceed to Checkout</button>
             </div>
           </>
         )}
