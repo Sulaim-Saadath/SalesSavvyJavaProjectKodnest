@@ -1,7 +1,7 @@
 import React from "react";
 import "./CategoryNavigation.css";
 
-export function CategoryNavigation({ onCategoryClick }) {
+export  function CategoryNavigation({ onCategoryClick }) {
   const categories = [
     "Shirts",
     "Pants",

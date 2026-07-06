@@ -4,6 +4,7 @@ import LoginPage from "./LoginPage";
 import RegistrationPage from "./RegistrationPage";
 import CustomerHome from "./CustomerHome";
 import CartPage from "./CartPage";
+import OrdersPage from "./OrdersPage";
 function AppRoutes() {
   return (
     <Routes>
@@ -11,6 +12,7 @@ function AppRoutes() {
       <Route path="/register" element={<RegistrationPage />} />
       <Route path="/customerhome" element={<CustomerHome />} />
       <Route path="/cart" element={<CartPage />} />
+      <Route path="/orders" element={<OrdersPage />} />
     </Routes>
   );
 }
