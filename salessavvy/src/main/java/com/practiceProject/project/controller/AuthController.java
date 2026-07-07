@@ -2,6 +2,7 @@ package com.practiceProject.project.controller;
 
 
 import java.util.HashMap;
+
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,7 @@ import com.practiceProject.project.entity.User;
 import com.practiceProject.project.service.AuthService;
 
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
@@ -51,5 +53,27 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("error", e.getMessage()));
         }
+    }
+    
+    @PostMapping("/logout")
+    public ResponseEntity<Map<String, String>> logout(HttpServletRequest request, HttpServletResponse response) {
+    	try {
+    		User user = (User) request.getAttribute("authenticatedUser");
+    		authService.logout(user);
+    		
+    		Cookie cookie = new Cookie("Message", "Logout Succesfull");
+    		cookie.setHttpOnly(true);
+    		cookie.setMaxAge(0);
+    		cookie.setPath("/");
+    		response.addCookie(cookie);
+    		
+    		Map<String, String> responseBody = new HashMap<String, String>();
+    		responseBody.put("Message", "Logout Successful");
+    		return ResponseEntity.ok(responseBody);
+    	} catch (RuntimeException e) {
+    		Map<String, String> errorResponse = new HashMap<String, String>();
+    		errorResponse.put("Message", "Logout failed");
+    		return ResponseEntity.status(500).body(errorResponse);
+    	}
     }
 }
