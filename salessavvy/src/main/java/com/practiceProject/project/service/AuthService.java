@@ -122,4 +122,12 @@ public class AuthService {
     public Optional<User> findUserByUsername(String username) {
         return userRepository.findByUsername(username);
     }
+    
+    public void logout(User user) {
+    	int userId = user.getUserId();
+    	JWTToken token = jwtTokenRepository.findByUserId(userId);
+    	if(token != null) {
+    		jwtTokenRepository.deleteByUserId(userId);
+    	}
+    }
 }
