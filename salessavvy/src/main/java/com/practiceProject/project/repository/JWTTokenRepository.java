@@ -1,6 +1,6 @@
 package com.practiceProject.project.repository;
 
-import java.beans.Transient;
+
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -58,10 +58,23 @@ public class AuthController {
     @PostMapping("/logout")
     public ResponseEntity<Map<String, String>> logout(HttpServletRequest request, HttpServletResponse response) {
     	try {
-    		User user = (User) request.getAttribute("authenticatedUser");
-    		authService.logout(user);
+//    		User user = (User) request.getAttribute("authenticatedUser");
+//    	System.out.println(user);
+//    		authService.logout(user);
     		
-    		Cookie cookie = new Cookie("Message", "Logout Succesfull");
+    		User user = (User) request.getAttribute("authenticatedUser");
+
+    		if (user == null) {
+    		    System.out.println("User is NULL");
+    		    return ResponseEntity.status(401)
+    		            .body(Map.of("Message", "User not authenticated"));
+    		}
+
+    		System.out.println("Authenticated user: " + user.getUsername());
+
+    		authService.logout(user);
+    	
+    		Cookie cookie = new Cookie("Message", "Logout_Succesfull");
     		cookie.setHttpOnly(true);
     		cookie.setMaxAge(0);
     		cookie.setPath("/");
@@ -71,6 +84,7 @@ public class AuthController {
     		responseBody.put("Message", "Logout Successful");
     		return ResponseEntity.ok(responseBody);
     	} catch (RuntimeException e) {
+    		e.printStackTrace();
     		Map<String, String> errorResponse = new HashMap<String, String>();
     		errorResponse.put("Message", "Logout failed");
     		return ResponseEntity.status(500).body(errorResponse);
