@@ -33,4 +33,5 @@ public interface JWTTokenRepository extends JpaRepository<JWTToken, Integer> {
 	@Transactional
 	@Query("DELETE FROM JWTToken t WHERE t.user.userId = :userId")
 	void deleteByUserId(@Param("userId") int userId);
+	
 }
