@@ -1,10 +1,13 @@
 package com.practiceProject.project.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,6 +16,7 @@ import com.practiceProject.project.entity.Product;
 import com.practiceProject.project.service.AdminProductService;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 @RequestMapping("/admin/products")
 public class AdminProductController {
 
@@ -23,14 +27,15 @@ public class AdminProductController {
 		this.adminProductService = adminProductService;
 	}
 
+	@PostMapping("/add")
 	public ResponseEntity<?> addProduct(@RequestBody Map<String, Object> productRequest) {
 		try {
 			// Read product details from the request body
 			String name = (String) productRequest.get("name");
-			String description = (String) productRequest.get("desctiption");
+			String description = (String) productRequest.get("description");
 			Double price = Double.valueOf(String.valueOf(productRequest.get("price")));
-			Integer stock = (Integer) productRequest.get("stock");
-			Integer categoryId = (Integer) productRequest.get("categoryId");
+			Integer stock = Integer.valueOf(String.valueOf(productRequest.get("stock")));
+			Integer categoryId = Integer.valueOf(String.valueOf(productRequest.get("categoryId")));
 			String imageUrl = (String) productRequest.get("imageUrl");
 
 			// Call service layer to add the product and its image
@@ -38,7 +43,10 @@ public class AdminProductController {
 					imageUrl);
 
 			// Return success response after product is added
-			return ResponseEntity.status(HttpStatus.CREATED).body(addedProduct);
+			Map<String, Object> response = new HashMap<>();
+			response.put("product", addedProduct);
+
+			return ResponseEntity.status(HttpStatus.CREATED).body(response);
 
 		} catch (IllegalArgumentException e) {
 
@@ -46,13 +54,13 @@ public class AdminProductController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 
 		} catch (Exception e) {
-
+			e.printStackTrace();
 			// Return 500 Internal Server Error for unexpected exceptions
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
 		}
 	}
 
-	@DeleteMapping()
+	@DeleteMapping("/delete")
 	public ResponseEntity<?> deleteProduct(@RequestBody Map<String, Integer> requestBody) {
 		try {
 			Integer productId = requestBody.get("productId");

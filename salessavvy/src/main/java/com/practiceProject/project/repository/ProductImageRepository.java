@@ -3,9 +3,12 @@ package com.practiceProject.project.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import com.practiceProject.project.entity.ProductImage;
+
+import jakarta.transaction.Transactional;
 
 public interface ProductImageRepository extends JpaRepository<ProductImage, Integer>{
 	List<ProductImage> findByProduct_ProductId(Integer productId);
@@ -26,6 +29,9 @@ public interface ProductImageRepository extends JpaRepository<ProductImage, Inte
 	// Example:
 	// Product ID = 1
 	// Returns all images linked to product 1
+	
+	@Transactional
+	@Modifying
 	@Query("DELETE FROM ProductImage pi WHERE pi.product.productId = :productId")
 	void deleteByProductId(Integer productId);
 }
