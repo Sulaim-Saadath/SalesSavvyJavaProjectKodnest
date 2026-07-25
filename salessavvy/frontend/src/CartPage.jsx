@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./CartPage.css";
-import { Header } from "./components/Header";
-import { Footer } from "./components/Footer";
+import  Header  from "./components/Header";
+import  Footer  from "./components/Footer";
 import { useNavigate } from "react-router-dom";
 
 export default function CartPage() {

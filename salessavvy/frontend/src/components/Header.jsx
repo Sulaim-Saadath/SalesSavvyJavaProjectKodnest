@@ -4,7 +4,7 @@ import { ProfileDropdown } from "./ProfileDropdown";
 import "../App.css";
 import Logo from "./Logo";
 
-export function Header({ cartCount, username }) {
+export default function Header({ cartCount, username }) {
   return (
     <header className="header">
 

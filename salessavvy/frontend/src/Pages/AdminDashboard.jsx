@@ -1,9 +1,9 @@
 import { useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import DashboardCard from "../components/DashboardCard";
 import CustomModal from "../components/CustomModal";
 import "./AdminDashboard.css";
+import "../components/DashboardCard.css";
 import React from "react";
 
 export default function AdminDashboard() {
@@ -35,6 +35,30 @@ export default function AdminDashboard() {
       team: "User Management",
       modalType: "modifyUser",
     },
+    {
+      title: "Monthly Business",
+      description: "view revenue metrics for specific months",
+      team: "Analytics",
+      modalType: "monthlyBusiness",
+    },
+    {
+      title: "Yearly Business",
+      description: "Analyze annual revenue performance",
+      team: "Analytics",
+      modalType: "yearlyBusiness",
+    },
+    {
+      title: "Overall Business",
+      description: "View total revenue since inception",
+      team: "Analytics",
+      modalType: "overallBusiness",
+    },
+    {
+      title: "Day Business",
+      description: "Track daily revenue and transactions",
+      team: "Analytics",
+      modalType: "dailyBusiness",
+    },
     // Other cards...
   ];
 
@@ -51,14 +75,19 @@ export default function AdminDashboard() {
         body: JSON.stringify(productData), // Convert object to JSON
       });
 
+      console.log("Status:", response.status);
+
+      if (!response.ok) {
+        const error = await response.text();
+        console.log("Backend Error:", error);
+        return;
+      }
+
       // Convert response to JavaScript object
       const data = await response.json();
-
+      console.log(data);
       // Store response data for displaying in the modal
-      setResponse({
-        product: data,
-        imageUrl: productData.imageUrl,
-      });
+      setResponse(data);
 
       // Switch modal to response view
       setModalType("response");
@@ -88,13 +117,12 @@ export default function AdminDashboard() {
       if (response.ok) {
         console.log("Product successfully deleted");
 
-        // Store success response
+        // Show response modal
         setResponse({
           message: "Product deleted successfully",
         });
 
-        // Show response modal
-        setModalType("response");
+        setModalType("deleteResponse");
       }
     } catch (error) {
       // Log error if request fails
@@ -244,8 +272,209 @@ export default function AdminDashboard() {
       }
     }
   };
+
+  // Handles Yearly Business request
+  const handleYearlyBusiness = async (data) => {
+    try {
+      // Send request to fetch yearly business details
+      const response = await fetch(
+        `http://localhost:9090/admin/business/yearly?year=${data?.year}`,
+        {
+          method: "GET", // HTTP GET request
+          credentials: "include", // Include authentication cookie
+          headers: {
+            "Content-Type": "application/json", // Sending JSON data
+          },
+        },
+      );
+
+      // Check if request is successful
+      if (response.ok) {
+        const data = await response.json();
+
+        // Store yearly business data
+        setResponse({ yearlyBusiness: data });
+
+        // Show yearly business modal
+        setModalType("yearlyBusiness");
+      } else {
+        // Read error message
+        const errorMessage = await response.text();
+
+        // Store error response
+        setResponse({
+          message: `Error: ${errorMessage}`,
+        });
+
+        // Show response modal
+        setModalType("response");
+      }
+    } catch (error) {
+      // Log error if request fails
+      console.error("Error fetching yearly business details:", error);
+
+      // Store generic error message
+      setResponse({
+        message: "Error: Something went wrong",
+      });
+
+      // Show response modal
+      setModalType("response");
+    }
+  };
+
+  // Handles Overall Business request
+  const handleOverallBusiness = async () => {
+    try {
+      // Send request to fetch overall business details
+      const response = await fetch(
+        "http://localhost:9090/admin/business/overall",
+        {
+          method: "GET", // HTTP GET request
+          credentials: "include", // Include authentication cookie
+          headers: {
+            "Content-Type": "application/json", // Sending JSON data
+          },
+        },
+      );
+
+      // Check if request is successful
+      if (response.ok) {
+        const data = await response.json();
+
+        // Store overall business data
+        setResponse({ overallBusiness: data });
+
+        // Show Overall Business modal
+        setModalType("overallBusiness");
+      } else {
+        // Read error message
+        const errorMessage = await response.text();
+
+        // Store error response
+        setResponse({
+          message: `Error: ${errorMessage}`,
+        });
+
+        // Show response modal
+        setModalType("response");
+      }
+    } catch (error) {
+      // Log error if request fails
+      console.error("Error fetching overall business details:", error);
+
+      // Store generic error message
+      setResponse({
+        message: "Error: Something went wrong",
+      });
+
+      // Show response modal
+      setModalType("response");
+    }
+  };
+
+  // Handles Monthly Business request
+  const handleMonthlyBusiness = async (data) => {
+    try {
+      // Send request to fetch monthly business details
+      const response = await fetch(
+        `http://localhost:9090/admin/business/monthly?month=${data?.month}&year=${data?.year}`,
+        {
+          method: "GET", // HTTP GET request
+          credentials: "include", // Include authentication cookie
+          headers: {
+            "Content-Type": "application/json", // Sending JSON data
+          },
+        },
+      );
+
+      // Check if request is successful
+      if (response.ok) {
+        const data = await response.json();
+
+        // Store monthly business data
+        setResponse({ monthlyBusiness: data });
+
+        // Show Monthly Business modal
+        setModalType("monthlyBusiness");
+      } else {
+        // Read error message
+        const errorMessage = await response.text();
+
+        // Store error response
+        setResponse({
+          message: `Error: ${errorMessage}`,
+        });
+
+        // Show Monthly Business modal
+        setModalType("monthlyBusiness");
+      }
+    } catch (error) {
+      // Log error if request fails
+      console.error("Error fetching monthly business details:", error);
+
+      // Store generic error message
+      setResponse({
+        message: "Error: Something went wrong",
+      });
+
+      // Show response modal
+      setModalType("response");
+    }
+  };
+
+  // Handles Daily Business request
+  const handleDailyBusiness = async (data) => {
+    try {
+      // Send request to fetch daily business details
+      const response = await fetch(
+        `http://localhost:9090/admin/business/daily?date=${data?.date}`,
+        {
+          method: "GET", // HTTP GET request
+          credentials: "include", // Include authentication cookie
+          headers: {
+            "Content-Type": "application/json", // Sending JSON data
+          },
+        },
+      );
+
+      // Check if request is successful
+      if (response.ok) {
+        const data = await response.json();
+
+        // Store daily business data
+        setResponse({ dailyBusiness: data });
+
+        // Show Daily Business modal
+        setModalType("dailyBusiness");
+      } else {
+        // Read error message
+        const errorMessage = await response.text();
+
+        // Store error response
+        setResponse({
+          message: `Error: ${errorMessage}`,
+        });
+
+        // Show response modal
+        setModalType("response");
+      }
+    } catch (error) {
+      // Log error if request fails
+      console.error("Error fetching daily business details:", error);
+
+      // Store generic error message
+      setResponse({
+        message: "Error: Something went wrong",
+      });
+
+      // Show response modal
+      setModalType("response");
+    }
+  };
   return (
     <div>
+      <Header />
       <div className="admin-dashboard">
         {/* Main dashboard content */}
         <main className="dashboard-content">
@@ -257,9 +486,17 @@ export default function AdminDashboard() {
                 key={index} // Unique key for each card
                 className="card"
                 // Open the corresponding modal
+                // onClick={() => {
+                //   alert("Clicked");
+                //   console.log(card.modalType);
+                //   setModalType(card.modalType);
+                // }}
                 onClick={() => {
+                  console.log(card.modalType);
                   setModalType(card.modalType);
-                  setModalData(null); // Clear previous response
+                  setModalData(null);
+                  // setModalType(card.modalType);
+                  // setModalData(null); // Clear previous response
                 }}
               >
                 {/* Card details */}
@@ -294,6 +531,7 @@ export default function AdminDashboard() {
               }
 
               if (modalType === "deleteProduct") {
+                console.log("Delete Submit:", data);
                 handleDeleteProductSubmit(data);
               }
 
@@ -305,11 +543,28 @@ export default function AdminDashboard() {
               if (modalType === "modifyUser") {
                 handleModifyUserSubmit(data);
               }
+
+              if (modalType === "yearlyBusiness") {
+                handleYearlyBusiness(data);
+              }
+
+              if (modalType === "overallBusiness") {
+                handleOverallBusiness();
+              }
+
+              if (modalType === "monthlyBusiness") {
+                handleMonthlyBusiness(data);
+              }
+
+              if (modalType === "dailyBusiness") {
+                handleDailyBusiness(data);
+              }
             }}
             // Pass response data to the modal
             response={response}
           />
         )}
+        <Footer />
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { CategoryNavigation } from "./components/CategoryNavigation";
-import { Header } from "./components/Header";
-import { Footer } from "./components/Footer";
+import  Header  from "./components/Header";
+import  Footer  from "./components/Footer";
 import "./OrdersPage.css";
 
 export default function OrdersPage() {

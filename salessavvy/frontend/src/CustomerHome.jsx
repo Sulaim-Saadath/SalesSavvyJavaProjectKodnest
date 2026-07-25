@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { CategoryNavigation } from "./components/CategoryNavigation";
 import { ProductList } from "./components/ProductList";
-import { Footer } from "./components/Footer";
-import { Header } from "./components/Header";
+import  Footer  from "./components/Footer";
+import  Header  from "./components/Header";
 import "./CustomerHome.css";
 
 export default function CustomerHome() {
