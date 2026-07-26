@@ -5,7 +5,7 @@ import RegistrationPage from "./RegistrationPage";
 import CustomerHome from "./CustomerHome";
 import CartPage from "./CartPage";
 import OrdersPage from "./OrdersPage";
-import AdminDashboard from "./pages/AdminDashboard";
+import AdminDashboard from "./Pages/AdminDashboard";
 function AppRoutes() {
   return (
     <Routes>
@@ -14,7 +14,7 @@ function AppRoutes() {
       <Route path="/customerhome" element={<CustomerHome />} />
       <Route path="/cart" element={<CartPage />} />
       <Route path="/orders" element={<OrdersPage />} />
-      <Route path="/admin/dashboard" element={<AdminDashboard />} />
+      <Route path="/admin-dashboard" element={<AdminDashboard />} />
     </Routes>
   );
 }
