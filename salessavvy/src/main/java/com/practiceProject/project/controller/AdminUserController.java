@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,18 +46,23 @@ public class AdminUserController {
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 		} catch (Exception e) {
+			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something Went Wrong");
 		}
 	}
 
+	@PostMapping("/getbyid")
 	public ResponseEntity<?> getUserById(@RequestBody Map<String, Integer> userRequest) {
 		try {
+		    System.out.println(userRequest);
+		    System.out.println(userRequest.get("userId"));
 			Integer userId = userRequest.get("userId");
 			User user = adminUserService.getUserById(userId);
 			return ResponseEntity.status(HttpStatus.OK).body(user);
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 		} catch (Exception e) {
+			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something Went Wrong");
 		}
 	}

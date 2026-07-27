@@ -111,3 +111,21 @@
   transform: translateY(-2px);
   box-shadow: 0 8px 15px rgba(239, 68, 68, 0.35);
 }
+
+.delete-btn {
+  background: #dc2626;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.delete-btn:hover {
+  background: #b91c1c;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(220, 38, 38, 0.35);
+}

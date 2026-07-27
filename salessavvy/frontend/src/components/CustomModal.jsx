@@ -8,6 +8,7 @@ function CustomModal({ modalType, onClose, onSubmit, response }) {
     categoryId: "",
     imageUrl: "",
     description: "",
+    productId: " ",
   });
 
   const handleInputChange = (e) => {
@@ -108,10 +109,9 @@ function CustomModal({ modalType, onClose, onSubmit, response }) {
           </div>
         </>
       )}
-      {modalType === "response" && response && (
+      {modalType === "response" && response?.productData && (
         <>
           <h2>✅ Product Added Successfully</h2>
-
           <div style={{ textAlign: "center" }}>
             <img
               src={response.imageUrl}
@@ -119,27 +119,60 @@ function CustomModal({ modalType, onClose, onSubmit, response }) {
               width="180"
               style={{ borderRadius: "10px" }}
             />
-
             <h3>{response.productData.name}</h3>
-
             <p>
               <b>Price:</b> ₹{response.productData.price}
             </p>
-
             <p>
               <b>Stock:</b> {response.productData.stock}
             </p>
-
             <p>
               <b>Category ID:</b> {response.productData.categoryId}
             </p>
-
             <button className="submit-btn" onClick={onClose}>
               Close
             </button>
           </div>
         </>
       )}
+      {modalType === "deleteProduct" && (
+        <>
+          <h2>Delete Product</h2>
+          <form className="modal-form">
+            <div className="modal-form-item">
+              <label htmlFor="productId">Product ID</label>
+              <input
+                type="number"
+                id="productId"
+                name="productId"
+                placeholder="Enter Product ID"
+                value={formData.productId}
+                onChange={handleInputChange}
+              />
+            </div>
+          </form>
+          <div className="modal-buttons">
+            <button type="button" className="cancel-btn" onClick={onClose}>
+              Cancel
+            </button>
+            <button type="button" className="delete-btn" onClick={handleSubmit}>
+              Delete Product
+            </button>
+          </div>
+        </>
+      )}
+
+      {modalType === "response" &&
+        response?.message &&
+        !response.productData && (
+          <>
+            <h2>🗑 Product Deleted</h2>
+            <p>{response.message}</p>
+            <button className="submit-btn" onClick={onClose}>
+              Close
+            </button>
+          </>
+        )}
     </div>
   );
 }

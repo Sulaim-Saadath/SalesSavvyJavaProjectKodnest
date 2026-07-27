@@ -15,6 +15,12 @@ function AdminDashboard() {
       team: "Product Management",
       modalType: "addProduct",
     },
+    {
+      title: "Delete Product",
+      description: "Remove products from inventory system",
+      team: "Product Management",
+      modalType: "deleteProduct",
+    },
   ];
 
   const handleAddProductSubmit = async (productData) => {
@@ -39,6 +45,36 @@ function AdminDashboard() {
       setModalType("response");
     } catch (error) {
       console.error("Error adding product:", error);
+    }
+  };
+
+  const handleDeleteProductSubmit = async (productId) => {
+    try {
+      const response = await fetch("http://localhost:9090/admin/products/delete", {
+        method: "DELETE",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          productId,
+        }),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setResponse(data);
+      } else {
+        const errorMessage = await response.text();
+        setResponse({
+          message: `Error: ${errorMessage}`,
+        });
+      }
+      setModalType("response");
+    } catch (error) {
+      console.error("Delete Error:", error);
+      setResponse({
+        message: "Failed to delete product.",
+      });
     }
   };
 
@@ -82,6 +118,10 @@ function AdminDashboard() {
             onSubmit={(data) => {
               if (modalType === "addProduct") {
                 handleAddProductSubmit(data);
+              }
+
+              if (modalType === "deleteProduct") {
+                handleDeleteProductSubmit(data.productId);
               }
             }}
             response={response}

@@ -65,7 +65,10 @@ public class AdminProductController {
 		try {
 			Integer productId = requestBody.get("productId");
 			adminProductService.deleteProduct(productId);
-			return ResponseEntity.status(HttpStatus.OK).body("Product deleted successfully");
+			Map<String, String> response = new HashMap<>();
+			response.put("message", "Product deleted successfully");
+
+			return ResponseEntity.ok(response);
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 		} catch (Exception e) {
