@@ -8,18 +8,60 @@ function AdminDashboard() {
   const [modalType, setModalType] = useState("");
   const [response, setResponse] = useState(null);
 
-  const cardData = [
+  const productCards = [
     {
       title: "Add Product",
-      description: "Easily add products to your store.",
+      description: "...",
       team: "Product Management",
       modalType: "addProduct",
     },
     {
       title: "Delete Product",
-      description: "Remove products from inventory system",
+      description: "...",
       team: "Product Management",
       modalType: "deleteProduct",
+    },
+  ];
+
+  const userCards = [
+    {
+      title: "View User Details",
+      description: "...",
+      team: "User Management",
+      modalType: "viewUser",
+    },
+    {
+      title: "Modify User",
+      description: "...",
+      team: "User Management",
+      modalType: "modifyUser",
+    },
+  ];
+
+  const businessCards = [
+    {
+      title: "Daily Business",
+      description: "...",
+      team: "Business Management",
+      modalType: "dailyBusiness",
+    },
+    {
+      title: "Monthly Business",
+      description: "...",
+      team: "Business Management",
+      modalType: "monthlyBusiness",
+    },
+    {
+      title: "Yearly Business",
+      description: "...",
+      team: "Business Management",
+      modalType: "yearlyBusiness",
+    },
+    {
+      title: "Overall Business",
+      description: "...",
+      team: "Business Management",
+      modalType: "overallBusiness",
     },
   ];
 
@@ -50,16 +92,19 @@ function AdminDashboard() {
 
   const handleDeleteProductSubmit = async (productId) => {
     try {
-      const response = await fetch("http://localhost:9090/admin/products/delete", {
-        method: "DELETE",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        "http://localhost:9090/admin/products/delete",
+        {
+          method: "DELETE",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            productId,
+          }),
         },
-        body: JSON.stringify({
-          productId,
-        }),
-      });
+      );
       if (response.ok) {
         const data = await response.json();
         setResponse(data);
@@ -78,13 +123,41 @@ function AdminDashboard() {
     }
   };
 
+  const handleViewUserSubmit = async ({ userId }) => {
+    try {
+      const response = await fetch("http://localhost:9090/admin/user/getbyid", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId }),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setResponse({ user: data });
+        setModalType("response");
+      } else {
+        const errorMessage = await response.text();
+        setResponse({ message: `Error: ${errorMessage}` });
+        setModalType("response");
+      }
+    } catch (error) {
+      console.error("Error fetching user details: ", error);
+      setResponse({ message: `Error: ${errorMessage}` });
+      setModalType("response");
+    }
+  };
+
   return (
     <div>
       <Header />
       <div className="admin-dashboard">
         <main className="dashboard-content">
+          {/* Product Management */}
+          <h2 className="section-title">Product Management</h2>
           <div className="card-grid">
-            {cardData.map((card, index) => (
+            {productCards.map((card, index) => (
               <div
                 key={index}
                 className="card"
@@ -98,7 +171,65 @@ function AdminDashboard() {
                     <h3 className="card-title">{card.title}</h3>
                     <span className="card-arrow">→</span>
                   </div>
+
                   <p className="card-description">{card.description}</p>
+
+                  <div className="card-footer">
+                    <div className="team-tag">{card.team}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* User Management */}
+          <h2 className="section-title">User Management</h2>
+          <div className="card-grid">
+            {userCards.map((card, index) => (
+              <div
+                key={index}
+                className="card"
+                onClick={() => {
+                  console.log("Card clicked");
+                  setModalType(card.modalType);
+                }}
+              >
+                <div className="card-content">
+                  <div className="card-header">
+                    <h3 className="card-title">{card.title}</h3>
+                    <span className="card-arrow">→</span>
+                  </div>
+
+                  <p className="card-description">{card.description}</p>
+
+                  <div className="card-footer">
+                    <div className="team-tag">{card.team}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Business Management */}
+          <h2 className="section-title">Business Management</h2>
+          <div className="card-grid">
+            {businessCards.map((card, index) => (
+              <div
+                key={index}
+                className="card"
+                onClick={() => {
+                  console.log("Card clicked");
+                  setModalType(card.modalType);
+                }}
+              >
+                <div className="card-content">
+                  <div className="card-header">
+                    <h3 className="card-title">{card.title}</h3>
+                    <span className="card-arrow">→</span>
+                  </div>
+
+                  <p className="card-description">{card.description}</p>
+
                   <div className="card-footer">
                     <div className="team-tag">{card.team}</div>
                   </div>
@@ -123,6 +254,30 @@ function AdminDashboard() {
               if (modalType === "deleteProduct") {
                 handleDeleteProductSubmit(data.productId);
               }
+
+              if (modalType === "viewUser") {
+                handleViewUserSubmit(data);
+              }
+
+              // if (modalType === "modifyUser") {
+              //   handleModifyUserSubmit(data);
+              // }
+
+              // if (modalType === "dailyBusiness") {
+              //   handleDailyBusinessSubmit(data);
+              // }
+
+              // if (modalType === "monthlyBusiness") {
+              //   handleMonthlyBusinessSubmit(data);
+              // }
+
+              // if (modalType === "yearlyBusiness") {
+              //   handleYearlyBusinessSubmit(data);
+              // }
+
+              // if (modalType === "overallBusiness") {
+              //   handleOverallBusinessSubmit(data);
+              // }
             }}
             response={response}
           />
@@ -132,5 +287,4 @@ function AdminDashboard() {
     </div>
   );
 }
-
 export default AdminDashboard;

@@ -10,6 +10,10 @@ function CustomModal({ modalType, onClose, onSubmit, response }) {
     description: "",
     productId: " ",
   });
+  const [inputValue, setInputValue] = useState("");
+  const handleGeneralInputChange = (e) => {
+    setInputValue(e.target.value);
+  };
 
   const handleInputChange = (e) => {
     setFormData({
@@ -19,11 +23,31 @@ function CustomModal({ modalType, onClose, onSubmit, response }) {
   };
 
   const handleSubmit = () => {
-    onSubmit(formData);
+    switch (modalType) {
+      case "addProduct":
+        onSubmit(formData);
+        break;
+
+      case "deleteProduct":
+        onSubmit({ productId: inputValue });
+        break;
+
+      case "viewUser":
+        onSubmit({ userId: inputValue });
+        break;
+
+      case "modifyUser":
+        onSubmit({ userId: inputValue });
+        break;
+
+      default:
+        break;
+    }
   };
   return (
-    <div className="modal">
-      {modalType === "addProduct" && (
+    <div className="modal-overlay">
+      <div className="modal">
+        {modalType === "addProduct" && (
         <>
           <h3>📦 Add Product</h3>
           <form className="modal-form">
@@ -173,6 +197,40 @@ function CustomModal({ modalType, onClose, onSubmit, response }) {
             </button>
           </>
         )}
+
+      {modalType === "viewUser" && (
+        <>
+          <h2>View User Details</h2>
+          <form>
+            <input
+              type="Number"
+              placeholder="Enter User ID"
+              value={inputValue}
+              onChange={handleGeneralInputChange}
+            />
+          </form>
+          <button onClick={handleSubmit}>Submit</button>
+          <button onClick={onClose}>Cancel</button>
+        </>
+      )}
+
+      {modalType === "response" && (
+        <>
+          <h2>User Details</h2>
+          {response?.user ? (
+            <>
+              <p><strong>User ID:</strong> {response.user.userId}</p>
+              <p><strong>Username:</strong> {response.user.username}</p>
+              <p><strong>Email:</strong> {response.user.email}</p>
+              <p><strong>Role:</strong> {response.user.role}</p>
+            </>
+          ) : (
+            <p>{response?.message}</p>
+          )}
+          <button onClick={onClose}>Close</button>
+        </>
+      )}
+      </div>
     </div>
   );
 }
