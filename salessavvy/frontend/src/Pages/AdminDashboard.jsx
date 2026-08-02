@@ -7,17 +7,23 @@ import Footer from "../components/Footer";
 function AdminDashboard() {
   const [modalType, setModalType] = useState("");
   const [response, setResponse] = useState(null);
+  const [userFormData, setUserFormData] = useState({
+    userId: "",
+    username: "",
+    email: "",
+    role: "",
+  });
 
   const productCards = [
     {
       title: "Add Product",
-      description: "...",
+      description: "Add the products Easily",
       team: "Product Management",
       modalType: "addProduct",
     },
     {
       title: "Delete Product",
-      description: "...",
+      description: "Delete product using product ID",
       team: "Product Management",
       modalType: "deleteProduct",
     },
@@ -26,13 +32,13 @@ function AdminDashboard() {
   const userCards = [
     {
       title: "View User Details",
-      description: "...",
+      description: "View the user using user ID",
       team: "User Management",
       modalType: "viewUser",
     },
     {
       title: "Modify User",
-      description: "...",
+      description: "Modify the user details of a particular user",
       team: "User Management",
       modalType: "modifyUser",
     },
@@ -136,7 +142,7 @@ function AdminDashboard() {
       if (response.ok) {
         const data = await response.json();
         setResponse({ user: data });
-        setModalType("response");
+        setModalType("viewUserResponse");
       } else {
         const errorMessage = await response.text();
         setResponse({ message: `Error: ${errorMessage}` });
@@ -149,6 +155,83 @@ function AdminDashboard() {
     }
   };
 
+  const handleModifyUserSubmit = async (data) => {
+    if (!data.username) {
+      console.log("FETCH BRANCH");
+      // Fetch user details
+      try {
+        const response = await fetch(
+          "http://localhost:9090/admin/user/getbyid",
+          {
+            method: "POST",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              userId: data.userId,
+            }),
+          },
+        );
+        if (response.ok) {
+          const userDetails = await response.json();
+          console.log("Fetched User:", userDetails);
+          setUserFormData({
+            userId: userDetails.userId,
+            username: userDetails.username,
+            email: userDetails.email,
+            role: userDetails.role,
+          });
+          setModalType("editUser");
+        } else {
+          const error = await response.text();
+          setResponse({
+            message: `Error: ${error}`,
+          });
+          setModalType("response");
+        }
+      } catch (error) {
+        console.error("Error fetching user details:", error);
+        setResponse({
+          message: "Error: Something went wrong",
+        });
+        setModalType("response");
+      }
+    } else {
+      try {
+        const response = await fetch(
+          "http://localhost:9090/admin/user/modify",
+          {
+            method: "PUT",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          },
+        );
+        if (response.ok) {
+          const updatedUser = await response.json();
+          setResponse({
+            user: updatedUser,
+          });
+          setModalType("response");
+        } else {
+          const error = await response.text();
+          setResponse({
+            message: `Error: ${error}`,
+          });
+          setModalType("response");
+        }
+      } catch (error) {
+        console.error("Error updating user details:", error);
+        setResponse({
+          message: "Error: Something went wrong",
+        });
+        setModalType("response");
+      }
+    }
+  };
   return (
     <div>
       <Header />
@@ -255,31 +338,18 @@ function AdminDashboard() {
                 handleDeleteProductSubmit(data.productId);
               }
 
-              if (modalType === "viewUser") {
+              if (modalType === "editUser") {
                 handleViewUserSubmit(data);
               }
 
-              // if (modalType === "modifyUser") {
-              //   handleModifyUserSubmit(data);
-              // }
-
-              // if (modalType === "dailyBusiness") {
-              //   handleDailyBusinessSubmit(data);
-              // }
-
-              // if (modalType === "monthlyBusiness") {
-              //   handleMonthlyBusinessSubmit(data);
-              // }
-
-              // if (modalType === "yearlyBusiness") {
-              //   handleYearlyBusinessSubmit(data);
-              // }
-
-              // if (modalType === "overallBusiness") {
-              //   handleOverallBusinessSubmit(data);
-              // }
+              if (modalType === "modifyUser") {
+                handleModifyUserSubmit(data);
+              }
             }}
             response={response}
+            userFormData={userFormData}
+            setUserFormData={setUserFormData}
+            handleModifyUserSubmit={handleModifyUserSubmit}
           />
         )}
       </div>
@@ -288,3 +358,19 @@ function AdminDashboard() {
   );
 }
 export default AdminDashboard;
+
+// if (modalType === "dailyBusiness") {
+//   handleDailyBusinessSubmit(data);
+// }
+
+// if (modalType === "monthlyBusiness") {
+//   handleMonthlyBusinessSubmit(data);
+// }
+
+// if (modalType === "yearlyBusiness") {
+//   handleYearlyBusinessSubmit(data);
+// }
+
+// if (modalType === "overallBusiness") {
+//   handleOverallBusinessSubmit(data);
+// }

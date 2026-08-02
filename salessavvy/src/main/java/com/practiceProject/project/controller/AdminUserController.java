@@ -30,7 +30,7 @@ public class AdminUserController {
 	@PutMapping("/modify")
 	public ResponseEntity<?> modifyUser(@RequestBody Map<String, Object> userRequest) {
 		try {
-			Integer userId = (Integer) userRequest.get("userId");
+			Integer userId = Integer.parseInt(userRequest.get("userId").toString());
 			String username = (String) userRequest.get("username");
 			String email = (String) userRequest.get("email");
 			String role = (String) userRequest.get("role");
@@ -42,7 +42,7 @@ public class AdminUserController {
 			response.put("role", updatedUser.getRole());
 			response.put("createdAt", updatedUser.getCreatedAt());
 			response.put("updatedAt", updatedUser.getUpdatedAt());
-			return ResponseEntity.status(HttpStatus.OK).body("User Modified successfully");
+			return ResponseEntity.ok(response);
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 		} catch (Exception e) {
