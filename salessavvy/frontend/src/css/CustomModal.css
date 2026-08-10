@@ -129,3 +129,18 @@
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(220, 38, 38, 0.35);
 }
+
+.business-response-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.business-response-item strong {
+  color: #1e3a8a;
+}
+
+.business-response-item span {
+  color: #333;
+}

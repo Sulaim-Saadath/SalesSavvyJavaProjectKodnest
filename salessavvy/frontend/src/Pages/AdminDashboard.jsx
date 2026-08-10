@@ -47,26 +47,26 @@ function AdminDashboard() {
   const businessCards = [
     {
       title: "Daily Business",
-      description: "...",
-      team: "Business Management",
+      description: "Track daily revenue and transactions",
+      team: "Analytics",
       modalType: "dailyBusiness",
     },
     {
       title: "Monthly Business",
-      description: "...",
-      team: "Business Management",
+      description: "View revenue metrics for specific months",
+      team: "Analytics",
       modalType: "monthlyBusiness",
     },
     {
       title: "Yearly Business",
-      description: "...",
-      team: "Business Management",
+      description: "Analyze annual revenue performance",
+      team: "Analytics",
       modalType: "yearlyBusiness",
     },
     {
       title: "Overall Business",
-      description: "...",
-      team: "Business Management",
+      description: "View total revenue since inception",
+      team: "Analytics",
       modalType: "overallBusiness",
     },
   ];
@@ -232,6 +232,154 @@ function AdminDashboard() {
       }
     }
   };
+
+  const handleMonthlyBusiness = async (data) => {
+    try {
+      const response = await fetch(
+        `http://localhost:9090/admin/business/monthly?month=${data?.month}&year=${data?.year}`,
+        {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+
+      if (response.ok) {
+        const result = await response.json();
+
+        console.log("Monthly Business:", result);
+
+        setResponse({
+          monthlyBusiness: result,
+        });
+
+        setModalType("monthlyBusinessResponse");
+      } else {
+        const errorMessage = await response.text();
+
+        setResponse({
+          message: `Error: ${errorMessage}`,
+        });
+
+        setModalType("response");
+      }
+    } catch (error) {
+      console.error("Error fetching monthly business details:", error);
+
+      setResponse({
+        message: "Error: Something went wrong",
+      });
+
+      setModalType("response");
+    }
+  };
+
+  const handleDailyBusiness = async (data) => {
+    try {
+      const response = await fetch(
+        `http://localhost:9090/admin/business/daily?date=${data.date}`,
+        {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+      if (response.ok) {
+        const result = await response.json();
+        console.log("Daily Business:", result);
+        setResponse({
+          dailyBusiness: result,
+        });
+        setModalType("dailyBusinessResponse");
+      } else {
+        const errorMessage = await response.text();
+        setResponse({
+          message: `Error: ${errorMessage}`,
+        });
+        setModalType("response");
+      }
+    } catch (error) {
+      console.error("Error fetching daily business details:", error);
+      setResponse({
+        message: "Error: Something went wrong",
+      });
+      setModalType("response");
+    }
+  };
+
+  const handleYearlyBusiness = async (data) => {
+    try {
+      const response = await fetch(
+        `http://localhost:9090/admin/business/yearly?year=${data.year}`,
+        {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+      if (response.ok) {
+        const result = await response.json();
+        console.log("Yearly Business:", result);
+        setResponse({
+          yearlyBusiness: result,
+        });
+        setModalType("yearlyBusinessResponse");
+      } else {
+        const errorMessage = await response.text();
+        setResponse({
+          message: `Error: ${errorMessage}`,
+        });
+        setModalType("response");
+      }
+    } catch (error) {
+      console.error("Error fetching yearly business details:", error);
+      setResponse({
+        message: "Error: Something went wrong",
+      });
+      setModalType("response");
+    }
+  };
+
+  const handleOverallBusiness = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:9090/admin/business/overall",
+        {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Overall Business:", data);
+        setResponse({
+          overallBusiness: data,
+        });
+        setModalType("overallBusinessResponse");
+      } else {
+        const errorMessage = await response.text();
+        setResponse({
+          message: `Error: ${errorMessage}`,
+        });
+        setModalType("response");
+      }
+    } catch (error) {
+      console.error("Error fetching overall business details:", error);
+      setResponse({
+        message: "Error: Something went wrong",
+      });
+      setModalType("response");
+    }
+  };
   return (
     <div>
       <Header />
@@ -345,6 +493,26 @@ function AdminDashboard() {
               if (modalType === "modifyUser") {
                 handleModifyUserSubmit(data);
               }
+
+              if (modalType === "viewUser") {
+                handleViewUserSubmit(data);
+              }
+
+              if (modalType === "monthlyBusiness") {
+                handleMonthlyBusiness(data);
+              }
+
+              if (modalType === "dailyBusiness") {
+                handleDailyBusiness(data);
+              }
+
+              if (modalType === "yearlyBusiness") {
+                handleYearlyBusiness(data);
+              }
+
+              if (modalType === "overallBusiness") {
+                handleOverallBusiness();
+              }
             }}
             response={response}
             userFormData={userFormData}
@@ -358,19 +526,3 @@ function AdminDashboard() {
   );
 }
 export default AdminDashboard;
-
-// if (modalType === "dailyBusiness") {
-//   handleDailyBusinessSubmit(data);
-// }
-
-// if (modalType === "monthlyBusiness") {
-//   handleMonthlyBusinessSubmit(data);
-// }
-
-// if (modalType === "yearlyBusiness") {
-//   handleYearlyBusinessSubmit(data);
-// }
-
-// if (modalType === "overallBusiness") {
-//   handleOverallBusinessSubmit(data);
-// }

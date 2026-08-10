@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.practiceProject.project.entity.Order;
 import com.practiceProject.project.entity.OrderItem;
+import com.practiceProject.project.entity.OrderStatus;
 import com.practiceProject.project.repository.OrderItemRepository;
 import com.practiceProject.project.repository.OrderRepository;
 import com.practiceProject.project.repository.ProductRepository;
@@ -44,7 +45,8 @@ public class AdminBusinessService {
 	}
 	
 	public Map<String, Object> calculateOverallBusiness() {
-		List<Order> succesfullOrders = orderRepository.findAllByStatus("SUCCESS");
+		List<Order> succesfullOrders =
+		        orderRepository.findAllByStatus(OrderStatus.SUCCESS);
 		BigDecimal totalBusiness = orderRepository.calculateOverallBusiness();
 		Map<String, Object> response = calculateBusinessMetrics(succesfullOrders);
 		response.put("totalBusiness", totalBusiness.doubleValue());

@@ -48,6 +48,10 @@ function CustomModal({
         handleModifyUserSubmit({ userId: inputValue });
         break;
 
+      case "overallBusiness":
+        onSubmit();
+        break;
+
       default:
         break;
     }
@@ -217,41 +221,62 @@ function CustomModal({
         {modalType === "viewUser" && (
           <>
             <h2>View User Details</h2>
-            <form>
-              <input
-                type="Number"
-                placeholder="Enter User ID"
-                value={inputValue}
-                onChange={handleGeneralInputChange}
-              />
+            <form className="modal-form">
+              <div className="modal-form-item">
+                <label htmlFor="userId">User ID</label>
+                <input
+                  type="number"
+                  id="userId"
+                  placeholder="Enter User ID"
+                  value={inputValue}
+                  onChange={handleGeneralInputChange}
+                />
+              </div>
             </form>
-            <button onClick={handleSubmit}>Submit</button>
-            <button onClick={onClose}>Cancel</button>
+            <div className="modal-buttons">
+              <button
+                type="button"
+                className="submit-btn"
+                onClick={handleSubmit}
+              >
+                Submit
+              </button>
+              <button type="button" className="cancel-btn" onClick={onClose}>
+                Cancel
+              </button>
+            </div>
           </>
         )}
-
         {modalType === "viewUserResponse" && (
           <>
             <h2>User Details</h2>
             {response?.user ? (
-              <>
-                <p>
-                  <strong>User ID:</strong> {response.user.userId}
-                </p>
-                <p>
-                  <strong>Username:</strong> {response.user.username}
-                </p>
-                <p>
-                  <strong>Email:</strong> {response.user.email}
-                </p>
-                <p>
-                  <strong>Role:</strong> {response.user.role}
-                </p>
-              </>
+              <div className="modal-form">
+                <div className="modal-form-item">
+                  <label>User ID</label>
+                  <input type="text" value={response.user.userId} readOnly />
+                </div>
+                <div className="modal-form-item">
+                  <label>Username</label>
+                  <input type="text" value={response.user.username} readOnly />
+                </div>
+                <div className="modal-form-item">
+                  <label>Email</label>
+                  <input type="email" value={response.user.email} readOnly />
+                </div>
+                <div className="modal-form-item">
+                  <label>Role</label>
+                  <input type="text" value={response.user.role} readOnly />
+                </div>
+              </div>
             ) : (
               <p>{response?.message}</p>
             )}
-            <button onClick={onClose}>Close</button>
+            <div className="modal-buttons">
+              <button className="submit-btn" onClick={onClose}>
+                Close
+              </button>
+            </div>
           </>
         )}
 
@@ -390,6 +415,296 @@ function CustomModal({
                 </button>
               </>
             )}
+          </>
+        )}
+
+        {modalType === "monthlyBusiness" && (
+          <>
+            <h2>Monthly Business</h2>
+            <form className="modal-form">
+              <div className="modal-form-item">
+                <label htmlFor="month">Month</label>
+                <input
+                  type="number"
+                  id="month"
+                  name="month"
+                  placeholder="Enter Month (1-12)"
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div className="modal-form-item">
+                <label htmlFor="year">Year</label>
+                <input
+                  type="number"
+                  id="year"
+                  name="year"
+                  placeholder="Enter Year"
+                  onChange={handleInputChange}
+                />
+              </div>
+            </form>
+            <div className="modal-buttons">
+              <button
+                className="submit-btn"
+                onClick={() =>
+                  onSubmit({
+                    month: formData.month,
+                    year: formData.year,
+                  })
+                }
+              >
+                Submit
+              </button>
+              <button className="cancel-btn" onClick={onClose}>
+                Cancel
+              </button>
+            </div>
+          </>
+        )}
+
+        {modalType === "monthlyBusinessResponse" && (
+          <>
+            <h2>Monthly Business</h2>
+
+            {response?.monthlyBusiness ? (
+              <div className="modal-form">
+                <div className="modal-form-item">
+                  <label>Total Business</label>
+
+                  <input
+                    type="text"
+                    value={response.monthlyBusiness.totalRevenue?.toFixed(2)}
+                    readOnly
+                  />
+                </div>
+
+                <div className="modal-form-item">
+                  <label>Category Sales</label>
+
+                  <div>
+                    {Object.keys(
+                      response.monthlyBusiness.categorySales || {},
+                    ).map((key) => (
+                      <div key={key} className="business-response-item">
+                        <strong>{key}</strong>
+
+                        <span>
+                          {response.monthlyBusiness.categorySales[key]}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <p>{response?.message}</p>
+            )}
+
+            <div className="modal-buttons">
+              <button className="submit-btn" onClick={onClose}>
+                Close
+              </button>
+            </div>
+          </>
+        )}
+
+        {modalType === "dailyBusiness" && (
+          <>
+            <h2>Daily Business</h2>
+            <form className="modal-form">
+              <div className="modal-form-item">
+                <label htmlFor="date">Date</label>
+                <input
+                  type="date"
+                  id="date"
+                  name="date"
+                  onChange={handleInputChange}
+                />
+              </div>
+            </form>
+            <div className="modal-buttons">
+              <button
+                className="submit-btn"
+                onClick={() =>
+                  onSubmit({
+                    date: formData.date,
+                  })
+                }
+              >
+                Submit
+              </button>
+              <button className="cancel-btn" onClick={onClose}>
+                Cancel
+              </button>
+            </div>
+          </>
+        )}
+
+        {modalType === "dailyBusinessResponse" && (
+          <>
+            <h2>Daily Business</h2>
+
+            {response?.dailyBusiness ? (
+              <div className="modal-form">
+                <div className="modal-form-item">
+                  <label>Total Business</label>
+                  <input
+                    type="text"
+                    value={response.dailyBusiness.totalRevenue?.toFixed(2)}
+                    readOnly
+                  />
+                </div>
+                <div className="modal-form-item">
+                  <label>Category Sales</label>
+                  <div>
+                    {Object.keys(
+                      response.dailyBusiness.categorySales || {},
+                    ).map((key) => (
+                      <div key={key} className="business-response-item">
+                        <strong>{key}</strong>
+
+                        <span>{response.dailyBusiness.categorySales[key]}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <p>{response?.message}</p>
+            )}
+            <div className="modal-buttons">
+              <button className="submit-btn" onClick={onClose}>
+                Close
+              </button>
+            </div>
+          </>
+        )}
+
+        {modalType === "yearlyBusiness" && (
+          <>
+            <h2>Yearly Business</h2>
+            <form className="modal-form">
+              <div className="modal-form-item">
+                <label htmlFor="year">Year</label>
+                <input
+                  type="number"
+                  id="year"
+                  name="year"
+                  placeholder="Enter Year"
+                  onChange={handleInputChange}
+                />
+              </div>
+            </form>
+            <div className="modal-buttons">
+              <button
+                className="submit-btn"
+                onClick={() =>
+                  onSubmit({
+                    year: formData.year,
+                  })
+                }
+              >
+                Submit
+              </button>
+              <button className="cancel-btn" onClick={onClose}>
+                Cancel
+              </button>
+            </div>
+          </>
+        )}
+
+        {modalType === "yearlyBusinessResponse" && (
+          <>
+            <h2>Yearly Business</h2>
+            {response?.yearlyBusiness ? (
+              <div className="modal-form">
+                <div className="modal-form-item">
+                  <label>Total Business</label>
+                  <input
+                    type="text"
+                    value={response.yearlyBusiness.totalRevenue?.toFixed(2)}
+                    readOnly
+                  />
+                </div>
+                <div className="modal-form-item">
+                  <label>Category Sales</label>
+                  <div>
+                    {Object.keys(
+                      response.yearlyBusiness.categorySales || {},
+                    ).map((key) => (
+                      <div key={key} className="business-response-item">
+                        <strong>{key}</strong>
+                        <span>
+                          {response.yearlyBusiness.categorySales[key]}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <p>{response?.message}</p>
+            )}
+            <div className="modal-buttons">
+              <button className="submit-btn" onClick={onClose}>
+                Close
+              </button>
+            </div>
+          </>
+        )}
+
+        {modalType === "overallBusiness" && (
+          <>
+            <h2>Overall Business</h2>
+            <div className="modal-buttons">
+              <button className="submit-btn" onClick={handleSubmit}>
+                Get Overall Business
+              </button>
+              <button className="cancel-btn" onClick={onClose}>
+                Cancel
+              </button>
+            </div>
+          </>
+        )}
+
+        {modalType === "overallBusinessResponse" && (
+          <>
+            <h2>Overall Business</h2>
+            {response?.overallBusiness ? (
+              <div className="modal-form">
+                <div className="modal-form-item">
+                  <label>Total Business</label>
+                  <input
+                    type="text"
+                    value={response.overallBusiness.totalRevenue?.toFixed(2)}
+                    readOnly
+                  />
+                </div>
+                <div className="modal-form-item">
+                  <label>Category Sales</label>
+                  <div>
+                    {Object.keys(
+                      response.overallBusiness.categorySales || {},
+                    ).map((key) => (
+                      <div key={key} className="business-response-item">
+                        <strong>{key}</strong>
+
+                        <span>
+                          {response.overallBusiness.categorySales[key]}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <p>{response?.message}</p>
+            )}
+            <div className="modal-buttons">
+              <button className="submit-btn" onClick={onClose}>
+                Close
+              </button>
+            </div>
           </>
         )}
       </div>
