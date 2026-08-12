@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useravatar from "../assets/useravatar.png";
 import "../App.css";
+import API_URL from "../api";
 
 export function ProfileDropdown({ username }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,7 +12,7 @@ export function ProfileDropdown({ username }) {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch("http://localhost:9090/api/auth/logout", {
+      const response = await fetch(`${API_URL}/api/auth/logout`, {
         method: "POST",
         credentials: "include",
       });

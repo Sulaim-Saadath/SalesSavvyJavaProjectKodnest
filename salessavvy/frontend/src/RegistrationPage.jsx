@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./App.css";
+import API_URL from "./api";
 
 export default function RegistrationPage() {
   const [formData, setFormData] = useState({
@@ -26,7 +27,7 @@ export default function RegistrationPage() {
     setSuccess("");
 
     try {
-      const response = await fetch("http://localhost:9090/api/users/register", {
+      const response = await fetch(`${API_URL}/api/users/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

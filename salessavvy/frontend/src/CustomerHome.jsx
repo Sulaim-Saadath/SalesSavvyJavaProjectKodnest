@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { CategoryNavigation } from "./components/CategoryNavigation";
 import { ProductList } from "./components/ProductList";
-import  Footer  from "./components/Footer";
-import  Header  from "./components/Header";
+import Footer from "./components/Footer";
+import Header from "./components/Header";
 import "./CustomerHome.css";
+import API_URL from "./api";
 
 export default function CustomerHome() {
   const [products, setProducts] = useState([]);
@@ -24,13 +25,11 @@ export default function CustomerHome() {
   const fetchProducts = async (category = "") => {
     try {
       const response = await fetch(
-        `http://localhost:9090/api/products${
-          category ? `?category=${category}` : ""
-        }`,
+        `${API_URL}/api/products${category ? `?category=${category}` : ""}`,
         {
           method: "GET",
           credentials: "include",
-        }
+        },
       );
 
       if (!response.ok) {
@@ -53,7 +52,7 @@ export default function CustomerHome() {
 
     try {
       const response = await fetch(
-        `http://localhost:9090/api/cart/items/count?username=${username}`,
+        `${API_URL}/api/cart/items/count?username=${username}`,
         {
           credentials: "include",
         },
@@ -82,7 +81,7 @@ export default function CustomerHome() {
     }
 
     try {
-      const response = await fetch("http://localhost:9090/api/cart/add", {
+      const response = await fetch(`${API_URL}/api/cart/add`, {
         credentials: "include",
         method: "POST",
         body: JSON.stringify({
@@ -105,8 +104,8 @@ export default function CustomerHome() {
   };
 
   const filteredProducts = products.filter((product) =>
-  product.name.toLowerCase().includes(searchTerm.toLowerCase())
-);
+    product.name.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
   return (
     <div className="customer-homepage">
       <Header
@@ -115,19 +114,22 @@ export default function CustomerHome() {
       />
 
       <input
-  type="text"
-  placeholder="Search products..."
-  value={searchTerm}
-  onChange={(e) => setSearchTerm(e.target.value)}
-  className="search-bar"
-/>
+        type="text"
+        placeholder="Search products..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="search-bar"
+      />
 
       <nav className="navigation">
         <CategoryNavigation onCategoryClick={handleCategoryClick} />
       </nav>
 
       <main className="main-content">
-        <ProductList products={filteredProducts} onAddToCart={handleAddToCart} />
+        <ProductList
+          products={filteredProducts}
+          onAddToCart={handleAddToCart}
+        />
       </main>
 
       <Footer />

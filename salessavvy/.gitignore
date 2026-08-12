@@ -31,3 +31,17 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Local secret files
+TokenPassword
+
+# Local backups
+salessavvy_backup_before_deployment/
+
+# Spring configuration containing local credentials
+src/main/resources/application.properties

@@ -3,6 +3,7 @@ import "./CartPage.css";
 import  Header  from "./components/Header";
 import  Footer  from "./components/Footer";
 import { useNavigate } from "react-router-dom";
+import API_URL from "./api";
 
 export default function CartPage() {
   // Stores all cart products
@@ -21,7 +22,7 @@ export default function CartPage() {
 
   const fetchCartItems = async () => {
     try {
-      const response = await fetch("http://localhost:9090/api/cart/items", {
+      const response = await fetch(`${API_URL}/api/cart/items`, {
         credentials: "include",
       });
 
@@ -64,7 +65,7 @@ export default function CartPage() {
   const handleRemoveItem = async (productId) => {
     try {
       // Send DELETE request to backend to remove item from cart
-      const response = await fetch("http://localhost:9090/api/cart/delete", {
+      const response = await fetch(`${API_URL}/api/cart/delete`, {
         method: "DELETE",
 
         // Send request body as JSON
@@ -107,7 +108,7 @@ export default function CartPage() {
       // }
 
       // Send updated quantity to backend
-      const response = await fetch("http://localhost:9090/api/cart/update", {
+      const response = await fetch(`${API_URL}/api/cart/update`, {
         method: "PUT",
 
         headers: {
@@ -151,7 +152,7 @@ export default function CartPage() {
       };
 
       // Create Razorpay order
-      const response = await fetch("http://localhost:9090/api/payment/create", {
+      const response = await fetch(`${API_URL}/api/payment/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -181,7 +182,7 @@ export default function CartPage() {
           try {
             // Verify payment with backend
             const verifyResponse = await fetch(
-              "http://localhost:9090/api/payment/verify",
+              `${API_URL}/api/payment/verify`,
               {
                 method: "POST",
                 headers: {

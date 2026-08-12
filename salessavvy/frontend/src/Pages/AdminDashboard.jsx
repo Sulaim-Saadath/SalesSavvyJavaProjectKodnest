@@ -3,6 +3,7 @@ import CustomModal from "../components/CustomModal";
 import "../css/AdminDashboard.css";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import API_URL from "../api";
 
 function AdminDashboard() {
   const [modalType, setModalType] = useState("");
@@ -73,7 +74,7 @@ function AdminDashboard() {
 
   const handleAddProductSubmit = async (productData) => {
     try {
-      const response = await fetch("http://localhost:9090/admin/products/add", {
+      const response = await fetch(`${API_URL}/admin/products/add`, {
         method: "POST",
         credentials: "include",
         headers: {
@@ -99,7 +100,7 @@ function AdminDashboard() {
   const handleDeleteProductSubmit = async (productId) => {
     try {
       const response = await fetch(
-        "http://localhost:9090/admin/products/delete",
+        `${API_URL}/admin/products/delete`,
         {
           method: "DELETE",
           credentials: "include",
@@ -131,7 +132,7 @@ function AdminDashboard() {
 
   const handleViewUserSubmit = async ({ userId }) => {
     try {
-      const response = await fetch("http://localhost:9090/admin/user/getbyid", {
+      const response = await fetch(`${API_URL}/admin/user/getbyid`, {
         method: "POST",
         credentials: "include",
         headers: {
@@ -161,7 +162,7 @@ function AdminDashboard() {
       // Fetch user details
       try {
         const response = await fetch(
-          "http://localhost:9090/admin/user/getbyid",
+          `${API_URL}/admin/user/getbyid`,
           {
             method: "POST",
             credentials: "include",
@@ -200,7 +201,7 @@ function AdminDashboard() {
     } else {
       try {
         const response = await fetch(
-          "http://localhost:9090/admin/user/modify",
+          `${API_URL}/admin/user/modify`,
           {
             method: "PUT",
             credentials: "include",
@@ -236,7 +237,7 @@ function AdminDashboard() {
   const handleMonthlyBusiness = async (data) => {
     try {
       const response = await fetch(
-        `http://localhost:9090/admin/business/monthly?month=${data?.month}&year=${data?.year}`,
+        `${API_URL}/admin/business/monthly?month=${data?.month}&year=${data?.year}`,
         {
           method: "GET",
           credentials: "include",
@@ -279,7 +280,7 @@ function AdminDashboard() {
   const handleDailyBusiness = async (data) => {
     try {
       const response = await fetch(
-        `http://localhost:9090/admin/business/daily?date=${data.date}`,
+        `${API_URL}/admin/business/daily?date=${data.date}`,
         {
           method: "GET",
           credentials: "include",
@@ -314,7 +315,7 @@ function AdminDashboard() {
   const handleYearlyBusiness = async (data) => {
     try {
       const response = await fetch(
-        `http://localhost:9090/admin/business/yearly?year=${data.year}`,
+       `${API_URL}/admin/business/yearly?year=${data.year}`,
         {
           method: "GET",
           credentials: "include",
@@ -349,7 +350,7 @@ function AdminDashboard() {
   const handleOverallBusiness = async () => {
     try {
       const response = await fetch(
-        "http://localhost:9090/admin/business/overall",
+        `${API_URL}/admin/business/overall`,
         {
           method: "GET",
           credentials: "include",

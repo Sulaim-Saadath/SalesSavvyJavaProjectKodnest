@@ -3,6 +3,7 @@ import { CategoryNavigation } from "./components/CategoryNavigation";
 import  Header  from "./components/Header";
 import  Footer  from "./components/Footer";
 import "./OrdersPage.css";
+import API_URL from "./api";
 
 export default function OrdersPage() {
   const [orders, setOrders] = useState([]);
@@ -25,7 +26,7 @@ export default function OrdersPage() {
 
   const fetchOrders = async () => {
     try {
-      const response = await fetch("http://localhost:9090/api/orders", {
+      const response = await fetch(`${API_URL}/api/orders`, {
         credentials: "include",
       });
       if (!response.ok) throw new Error("Failed to fetch orders");
@@ -45,7 +46,7 @@ export default function OrdersPage() {
     try {
       // Sends a GET request to fetch the cart count using the current username and includes the JWT cookie.
       const response = await fetch(
-        `http://localhost:9090/api/cart/items/count?username=${username}`,
+        `${API_URL}/api/cart/items/count?username=${username}`,
         {
           credentials: "include",
         },
