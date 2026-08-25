@@ -26,7 +26,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 //Allows requests from React frontend running on port 5174
 //allowCredentials = true enables cookies (JWT token)
-@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
+@CrossOrigin(origins = "https://sales-savvy-java-project-kodnest.vercel.app/", allowCredentials = "true")
 
 //Base URL for all cart APIs
 @RequestMapping("/api/cart")

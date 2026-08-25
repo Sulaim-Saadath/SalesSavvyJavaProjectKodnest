@@ -15,7 +15,7 @@ import com.practiceProject.project.service.OrderService;
 import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
+@CrossOrigin(origins = "https://sales-savvy-java-project-kodnest.vercel.app/", allowCredentials = "true")
 @RequestMapping("/api/orders")
 public class OrderController {
 

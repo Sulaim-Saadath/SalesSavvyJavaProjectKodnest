@@ -16,7 +16,7 @@ import com.practiceProject.project.entity.Product;
 import com.practiceProject.project.service.AdminProductService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
+@CrossOrigin(origins = "https://sales-savvy-java-project-kodnest.vercel.app/", allowCredentials = "true")
 @RequestMapping("/admin/products")
 public class AdminProductController {
 

@@ -45,3 +45,5 @@ salessavvy_backup_before_deployment/
 
 # Spring configuration containing local credentials
 src/main/resources/application.properties
+
+ca.pem
