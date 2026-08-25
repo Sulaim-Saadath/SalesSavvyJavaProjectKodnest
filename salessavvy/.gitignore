@@ -47,3 +47,6 @@ salessavvy_backup_before_deployment/
 src/main/resources/application.properties
 
 ca.pem
+cookies.txt
+render-cookies.txt
+curl
