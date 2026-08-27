@@ -30,7 +30,7 @@ public class AuthenticationFilter implements Filter {
 	private final AuthService authService;
 	private final UserRepository userRepository;
 
-	private static final String ALLOWED_ORIGIN = "https://sales-savvy-java-project-kodnest.vercel.app/";
+	private static final String ALLOWED_ORIGIN = "https://sales-savvy-java-project-kodnest.vercel.app";
 
 	private static final String[] UNAUTHENTICATED_PATHS = { "/api/users/register", "/api/auth/login" };
 
@@ -56,10 +56,12 @@ public class AuthenticationFilter implements Filter {
 	private void executeFilterLogic(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 
-		HttpServletRequest httpRequest = (HttpServletRequest) request;
-		HttpServletResponse httpResponse = (HttpServletResponse) response;
+HttpServletRequest httpRequest = (HttpServletRequest) request;
+HttpServletResponse httpResponse = (HttpServletResponse) response;
 
-		String requestURI = httpRequest.getRequestURI();
+setCORSHeaders(httpResponse);
+
+String requestURI = httpRequest.getRequestURI();
 		logger.info("Request URI: {}", requestURI);
 
 		// Allow unauthenticated paths
@@ -70,7 +72,7 @@ public class AuthenticationFilter implements Filter {
 
 		// Handle preflight (OPTIONS) requests
 		if (httpRequest.getMethod().equalsIgnoreCase("OPTIONS")) {
-			setCORSHeaders(httpResponse);
+			httpResponse.setStatus(HttpServletResponse.SC_OK);
 			return;
 		}
 
@@ -124,7 +126,6 @@ public class AuthenticationFilter implements Filter {
 		response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
 		response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 		response.setHeader("Access-Control-Allow-Credentials", "true");
-		response.setStatus(HttpServletResponse.SC_OK);
 	}
 
 	private void sendErrorResponse(HttpServletResponse response, int statusCode, String message) throws IOException {
