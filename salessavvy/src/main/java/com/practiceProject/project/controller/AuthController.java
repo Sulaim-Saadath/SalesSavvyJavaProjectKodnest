@@ -13,8 +13,7 @@ import com.practiceProject.project.dto.LoginRequest;
 import com.practiceProject.project.entity.User;
 import com.practiceProject.project.service.AuthService;
 
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseCookie;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -75,15 +74,11 @@ public class AuthController {
 
     		authService.logout(user);
     	
-ResponseCookie cookie = ResponseCookie.from("authToken", token)
-        .httpOnly(true)
-        .secure(true)
-        .path("/")
-        .maxAge(60 * 60)
-        .sameSite("None")
-        .build();
-
-response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+    		Cookie cookie = new Cookie("Message", "Logout_Succesfull");
+    		cookie.setHttpOnly(true);
+    		cookie.setMaxAge(0);
+    		cookie.setPath("/");
+    		response.addCookie(cookie);
     		
     		Map<String, String> responseBody = new HashMap<String, String>();
     		responseBody.put("Message", "Logout Successful");
