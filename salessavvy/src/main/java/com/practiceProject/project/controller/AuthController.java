@@ -15,7 +15,8 @@ import com.practiceProject.project.dto.LoginRequest;
 import com.practiceProject.project.entity.User;
 import com.practiceProject.project.service.AuthService;
 
-import jakarta.servlet.http.Cookie;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -36,13 +37,15 @@ public class AuthController {
             User user = authService.authenticate(loginRequest.getUsername(), loginRequest.getPassword());
             String token = authService.generateToken(user);
 
-            Cookie cookie = new Cookie("authToken", token);
-            cookie.setHttpOnly(true);
-            cookie.setSecure(true); // true in production with HTTPS
-            cookie.setPath("/");
-            cookie.setMaxAge(60 * 60); // 1 hour
+            ResponseCookie cookie = ResponseCookie.from("authToken", "")
+                    .httpOnly(true)
+                    .secure(true)
+                    .path("/")
+                    .maxAge(60 * 60)
+                    .sameSite("None")
+                    .build();
 
-            response.addCookie(cookie);
+            response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
             Map<String, Object> responseBody = new HashMap<>();
             responseBody.put("message", "Login successful");
