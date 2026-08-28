@@ -15,8 +15,6 @@ import com.practiceProject.project.dto.LoginRequest;
 import com.practiceProject.project.entity.User;
 import com.practiceProject.project.service.AuthService;
 
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseCookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -37,7 +35,7 @@ public class AuthController {
             User user = authService.authenticate(loginRequest.getUsername(), loginRequest.getPassword());
             String token = authService.generateToken(user);
 
-            ResponseCookie cookie = ResponseCookie.from("authToken", "")
+            ResponseCookie cookie = ResponseCookie.from("authToken", token)
                     .httpOnly(true)
                     .secure(true)
                     .path("/")
