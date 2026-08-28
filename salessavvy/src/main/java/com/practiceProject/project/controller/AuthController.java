@@ -8,6 +8,8 @@ import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 
 import com.practiceProject.project.dto.LoginRequest;
 import com.practiceProject.project.entity.User;
@@ -74,11 +76,15 @@ public class AuthController {
 
     		authService.logout(user);
     	
-    		Cookie cookie = new Cookie("Message", "Logout_Succesfull");
-    		cookie.setHttpOnly(true);
-    		cookie.setMaxAge(0);
-    		cookie.setPath("/");
-    		response.addCookie(cookie);
+    		ResponseCookie cookie = ResponseCookie.from("authToken", "")
+    		        .httpOnly(true)
+    		        .secure(true)
+    		        .path("/")
+    		        .maxAge(0)
+    		        .sameSite("None")
+    		        .build();
+
+    		response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
     		
     		Map<String, String> responseBody = new HashMap<String, String>();
     		responseBody.put("Message", "Logout Successful");
