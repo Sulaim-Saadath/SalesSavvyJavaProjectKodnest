@@ -11,41 +11,49 @@ export default function LoginPage() {
   const navigate = useNavigate();
 
   const handleSignIn = async (e) => {
-    e.preventDefault();
-    setError(null);
-
-    try {
-      const response = await fetch(`${API_URL}/api/auth/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          username,
-          password,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        console.log("User logged in successfully", data);
-
-        if (data.role === "CUSTOMER") {
-          navigate("/customerhome");
-        } else if (data.role === "ADMIN") {
-           navigate("/admin-dashboard");
-        } else {
-          throw new Error("Invalid user role");
-        }
+  e.preventDefault();
+  setError(null);
+  try {
+    const response = await fetch(`${API_URL}/api/auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        username,
+        password,
+      }),
+    });
+    const data = await response.json();
+    // Login successful
+    if (response.ok) {
+      console.log("User logged in successfully", data);
+      if (data.role === "CUSTOMER") {
+        navigate("/customerhome");
+      } else if (data.role === "ADMIN") {
+        navigate("/admin-dashboard");
       } else {
-        throw new Error(data.error || "Login failed");
+        setError("Invalid user role");
       }
-    } catch (err) {
-      setError(err.message);
+      return;
     }
-  };
+    // Wrong credentials
+    if (response.status === 401) {
+      setError("Invalid username or password");
+    }
+    // Other backend errors
+    else {
+      setError(data.error || "Something went wrong. Please try again.");
+    }
+  } catch (err) {
+    console.error("Login error:", err);
+    // Render may be waking up or server is unreachable
+    setError(
+      "Unable to connect to the server. It may be starting up. Please wait a moment and try again."
+    );
+  }
+};
 
   return (
     <div className="page-container">
